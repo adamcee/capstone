@@ -3,7 +3,12 @@ const mongoose = require('mongoose');
 
 async function main() {
   console.log('main function');
-  await mongoose.connect('mongodb://localhost:27017/capstone');
+
+
+  // IMPORTANT - You must create a MongoDB database with your desired name
+  // and change DB_NAME to that. Otherwise there won't be a database to connect to!
+  const DB_NAME = 'capstone';
+  await mongoose.connect(`mongodb://localhost:27017/${DB_NAME}`);
 
   const kittySchema = new mongoose.Schema({
     name: String,
