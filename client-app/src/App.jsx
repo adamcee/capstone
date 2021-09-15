@@ -1,124 +1,99 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import axios from "axios";
 
 // Source code imports
 import ItemsList from "./ItemsList";
 import SelectedItems from "./SelectedItems";
 
-/***
-  - Main page
-    X- Add routes
-    X- Add links to other pages
-      X- fruits
-      X- vegetables
-    X- Show title
-    - Show list of selected groceries
-  
-  - Fruits Page
-    X- Link back to main page
-    X- List all fruits
-      - Checkbox next to each fruit
-    - Clicking on checkbox adds frut to list of selected
-      groceries on main page
-    - If user goes to main page and navigates back here,
-      THEN the fruits they check are still checked.
-
-  - Vegetables Page
-    - Same features as fruits page but/w vegetables list
-
-
-
-    - What data do we need for "Selected items?"
-      - Item name - string
-      - If selected - boolean
-      ?- type ? - string
- */
+// Our raw data. In a real app we might get this via an API call instead of it being hardcoded.
+const TYPE_NAMES = {
+  fruits: "fruit",
+  vegetables: "vegetable",
+};
 
 function App(props) {
-  // Our raw data. In a real app we might get this via an API call instead of it being hardcoded.
-  const fruits = ["apples", "bananas", "oranges", "kiwis", "strawberries"];
-  const vegetables = ["broccoli", "carrots", "zuccini", "green beans"];
-
-  const TYPE_NAMES = {
-    fruits: "fruits",
-    vegetables: "vegetables",
-  };
-
-  // create initial state
-  const fruitsInitialState = fruits.reduce((acc, item) => {
-    return (acc[item] = {
-      checked: false,
-    });
-  }, {});
-
-  const vegetablesInitialState = vegetables.reduce((acc, item) => {
-    return (acc[item] = {
-      checked: false,
-    });
-  }, {});
-
-  // combine our data into one array
-  const allItemsInitialState = {
-    fruits: fruitsInitialState,
-    vegetables: vegetablesInitialState,
-  };
-
   // create the react component state we'll use to store our data
-  const [items, setItems] = useState(allItemsInitialState);
+  const [items, setItems] = useState([]);
 
-  // See the 'Note' section from here: https://reactjs.org/docs/hooks-reference.html#functional-updates
-  // IMPORTANT: When we update state involving objects (objects, arrays, etc), we MUST return
-  // a **new** object. We can't just modify an object property or an element in an array. This immutability - variables don't change,
-  // we create new ones with our updated value, is a core idea of functional programming and part of how React works.
-  // Otherwise React doesn't realize we have changed state - it expects state changes to be immutable, which with Javascript
-  // means we have to create a new version of our object/array so the *reference* to that thing changes.
+  useEffect(() => {
+    axios
+      .get("http://localhost:9999/grocery-items")
+      // handle success
+      .then((response) => {
+        const data = response.data;
+        console.log(data);
+
+        const parsedData = data.map((item) => ({ ...item, checked: false }));
+
+        // set our react state w/data from the server!
+        setItems(parsedData);
+      });
+  }, []);
+
   const updateItem = (itemName) => {
     console.log("updateItem for ", itemName);
     // Go thru all items; change the desired one; return a new array which has our updated item and all the other items.
     setItems((prevState) => {
-      const updatedState = { ...prevState };
-      updatedState[itemName].checked = !prevState[itemName].checked;
+      return prevState.map((item) => {
+        console.log(item);
+
+        // If it's the desired item, flip the value of `item.checked`
+        if (itemName === item.name) {
+          console.log("desired item ", item);
+
+          // This could also be done as `return { ...item, checked: !item.checked }`
+          const newItem = {
+            name: item.name,
+            type: item.type,
+            checked: !item.checked,
+          };
+
+          console.log("updated item ", newItem);
+          return newItem;
+        }
+
+        // If it's not the desired item, return it unchanged
+        return { ...item }; // IMPORTANT: Object destructuring like this creates a **new** object w/the same values
+      });
     });
   };
 
-  // console.log(items);
+  console.log("App.state.items is ", items);
 
-  return (
-    <Router>
-      <div className="App">
-        <h1>Grocery List App</h1>
-        <div>
-          <Link to="/">Selected Items</Link>
+  // Data being retrieved from server
+  if (!items.length) {
+    return <div>Loading</div>;
+  } else {
+    return (
+      <Router>
+        <div className="App">
+          <h1>Grocery List App</h1>
+          <div>
+            <Link to="/">Selected Items</Link>
+          </div>
+          <div>
+            <Link to="fruit">Fruits</Link>
+          </div>
+          <div>
+            <Link to="vegetable">Vegetables</Link>
+          </div>
         </div>
-        <div>
-          <Link to={`/${TYPE_NAMES.fruits}`}>Fruits</Link>
-        </div>
-        <div>
-          <Link to={`/${TYPE_NAMES.vegetables}`}>Vegetables</Link>
-        </div>
-      </div>
-      <Switch>
-        <Route path="/fruits">
-          <ItemsList
-            items={items.fruits}
-            type={TYPE_NAMES.fruits}
-            updateItem={updateItem}
-          />
-        </Route>
-        <Route path="/vegetables">
-          <ItemsList
-            items={items.vegetables}
-            type={TYPE_NAMES.vegetables}
-            updateItem={updateItem}
-          />
-        </Route>
-        <Route path="/">
-          <SelectedItems items={items} />
-        </Route>
-      </Switch>
-    </Router>
-  );
+        <Switch>
+          <Route path="/fruit">
+            <ItemsList items={items} type="fruit" updateItem={updateItem} />
+          </Route>
+          <Route path="/vegetable">
+            <ItemsList items={items} type="vegetable" updateItem={updateItem} />
+          </Route>
+          <Route path="/">
+            <SelectedItems items={items} />
+          </Route>
+        </Switch>
+      </Router>
+    );
+  }
 }
 
 export default App;
