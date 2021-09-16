@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prestart": "yarn docs",
+    "prestart": "npm docs",
     "start": "node src/app.js",
     "start:dev": "nodemon src/app.js -q",
     "docs": "apidoc -i src -o docs",
