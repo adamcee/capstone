@@ -1,43 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
+
+// src code imports
+const GROCERY_ITEMS = require('./grocery-items');
 const port = 9999;
 
 const formatItems = items => items.map(item => ({ name: item.name, type: item.type }));
-
-const GROCERY_ITEMS = [
-  {
-    name: 'kiwi',
-    type: 'fruit',
-  },
-  {
-    name: 'banana',
-    type: 'fruit',
-  },
-  {
-    name: 'apple',
-    type: 'fruit',
-  },
-  {
-    name: 'pear',
-    type: 'fruit',
-  },
-  {
-    name: 'carrot',
-    type: 'vegetable',
-  },
-  {
-    name: 'zuccini',
-    type: 'vegetable',
-  },
-  {
-    name: 'tomato',
-    type: 'vegetable',
-  },
-  {
-    name: 'onion',
-    type: 'vegetable',
-  },
-]
 
 async function main() {
   // connect to database
