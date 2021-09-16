@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 
 // src code imports
 const GROCERY_ITEMS = require('./grocery-items');
-const port = 9999;
+
+const PORT = 9999;
 
 const formatItems = items => items.map(item => ({ name: item.name, type: item.type }));
 
@@ -103,8 +104,8 @@ async function main() {
     res.send(`Invalid route - ${req.path}. Valid routes are 'fruit', 'vegetable'`)
   })
 
-  app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+  app.listen(PORT, () => {
+    console.log(`Example app listening at http://localhost:${PORT}`)
   })
 }
 
