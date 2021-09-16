@@ -115,7 +115,6 @@ app.get('/grocery-items/:type', (req, res) => {
   else {
     res.send(`Invalid route - ${req.path}. Valid routes are 'fruit', 'vegetable'`)
   }
-
 })
 
 
@@ -125,7 +124,6 @@ app.post('/grocery-items', (req, res) => {
   // create mongoose GroceryItem model instance. we can then save this to mongodb as a document
   const newItem = new GroceryItem({ name: body.name, type: body.type });
   
-  // TODO: USe JSON.stringify() for req.body and error so they are human readable in messages back to client
   // save to mongodb
   newItem
     .save()
@@ -142,14 +140,6 @@ app.listen(PORT, () => {
 })
 
 /***
-async function main() {
-  // connect to database
-
-// Express routes for our API
-
-  // parse POST request body data
-
-
   // TODO: This is not working yet.
   app.delete('/grocery-items/:type/:name', async( req, res) => {
     const type = req.params.type;
@@ -170,8 +160,4 @@ async function main() {
       .catch((err) => res.send(`Error - Unable to delete ${req.params.name}. ${err}`));
 
   });
-
-}
 **/
-
-// main().catch(err => console.log(err));
