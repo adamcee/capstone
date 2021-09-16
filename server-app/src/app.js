@@ -61,6 +61,9 @@ const app = express();
 
 // this allows us to parse HTTP POST request bodies 
 app.use(express.json());
+// Handle CORS (cross-origin-requests) issues so that our react app can be hosted
+// by a different server and still make HTTP requests to this one.
+app.use(cors());
 
 // For development - console each HTTP request to the server
 app.use((req, res, next) => {
