@@ -4,12 +4,10 @@ const mongoose = require('mongoose');
 
 /** Source code imports */
 // Mongoose models
-const GroceryItem = require('./models/grocery-item');
+const GroceryItem = require('./api/models/grocery-item');
 
 // Miscellaneos
-const GROCERY_ITEMS = require('./grocery-items');
-
-
+const GROCERY_ITEMS = require('./test/data/grocery-items');
 
 // helper function
 const formatItems = items => items.map(item => ({ name: item.name, type: item.type }));
