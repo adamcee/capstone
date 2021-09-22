@@ -59,7 +59,7 @@ GROCERY_ITEMS.forEach(item => {
  * **/
 
 // express server config
-const PORT = 9999;
+const PORT = process.env.SERVER_PORT;
 
 console.log('starting express')
 const app = express();
