@@ -22,13 +22,13 @@
   "homepage": "https://github.com/adamcee/capstone#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mongoose": "^6.0.5"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/mongodb": "^4.0.7",
-    "@types/mongoose": "^5.11.97",
     "apidoc": "^0.29.0"
   }
 }
