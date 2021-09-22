@@ -1,18 +1,27 @@
 /** npm module imports */
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require ('cors');
+
+// Use dotenv to load environment variables from .env file so we can access them via process.env
+require('dotenv').config()
 
 /** Source code imports */
 // Mongoose models
 const GroceryItem = require('./models/grocery-item');
 
 // Miscellaneos
-const GROCERY_ITEMS = require('./test/data/grocery-items');
+const GROCERY_ITEMS = require('../test/data/grocery-items');
 
 
 // db config
-const DB_NAME = 'capstone';
-const DB_URL = `mongodb://localhost:27017/${DB_NAME}`;
+const DB_NAME = process.env.DB_NAME;
+const DB_HOST = process.env.DB_HOST
+const DB_PORT = process.env.DB_PORT;
+
+console.log(`db env vars: ${DB_NAME} ${DB_HOST} ${DB_PORT}`);
+
+const DB_URL = `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`;
 
 /** Connect to our MongoDB database  
  **/
@@ -47,7 +56,7 @@ GROCERY_ITEMS.forEach(item => {
  * **/
 
 // express server config
-const PORT = 9999;
+const PORT = process.env.SERVER_PORT;
 
 console.log('starting express')
 const app = express();
@@ -58,6 +67,9 @@ const app = express();
 
 // this allows us to parse HTTP POST request bodies 
 app.use(express.json());
+// Handle CORS (cross-origin-requests) issues so that our react app can be hosted
+// by a different server and still make HTTP requests to this one.
+app.use(cors());
 
 // For development - console each HTTP request to the server
 app.use((req, res, next) => {

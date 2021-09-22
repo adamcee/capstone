@@ -2,10 +2,14 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import axios from "axios";
+import dotenv from "dotenv";
 
 // Source code imports
 import ItemsList from "./ItemsList";
 import SelectedItems from "./SelectedItems";
+
+// Get env vars from .env file
+dotenv.config();
 
 // Our raw data. In a real app we might get this via an API call instead of it being hardcoded.
 const TYPE_NAMES = {
@@ -13,13 +17,18 @@ const TYPE_NAMES = {
   vegetables: "vegetable",
 };
 
+const API_HOST = process.env.REACT_APP_API_HOST;
+console.log("API_HOST ", API_HOST);
+
+const API_GROCERY_ITEMS_ROUTE = `${API_HOST}/grocery-items`;
+
 function App(props) {
   // create the react component state we'll use to store our data
   const [items, setItems] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:9999/grocery-items")
+      .get(API_GROCERY_ITEMS_ROUTE)
       // handle success
       .then((response) => {
         const data = response.data;
