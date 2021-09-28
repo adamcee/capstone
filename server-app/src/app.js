@@ -1,3 +1,5 @@
+const path = require('path');
+
 /** npm module imports */
 const express = require('express');
 const mongoose = require('mongoose');
@@ -92,9 +94,6 @@ app.use((req, res, next) => {
 });
 
 /** Express server routes */
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
 
 /** Mount all our various API routes here */
 app.use('/v1', routes);
