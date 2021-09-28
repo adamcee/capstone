@@ -18,16 +18,13 @@ const GROCERY_ITEMS = require('../test/data/grocery-items');
 
 
 // db config
-const DB_NAME = process.env.DB_NAME;
-const DB_HOST = process.env.DB_HOST
-const DB_PORT = process.env.DB_PORT;
+const DB_URL = process.env.DB_URL;
 
-console.log(`db env vars: ${DB_NAME} ${DB_HOST} ${DB_PORT}`);
 
-const DB_URL = `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`;
 
 /** Connect to our MongoDB database  
  **/
+console.log(`connecting to db at ${DB_URL}`);
 
 // Configure mongoose to tell us if we succeed or if we fail to connect to the database
 mongoose.connection.on('open', () => `MongoDB: Successfully connected to ${DB_URL}`);
@@ -37,12 +34,13 @@ mongoose.connection.on('error', (error) => `MongoDB: Failed to connected to ${DB
 // We have to do this before we can save any Models to the database or get data from database.
 console.log('MongoDB: Attempting to connect ...');
 mongoose
-  .connect(`mongodb://localhost:27017/${DB_NAME}`)
+  .connect(DB_URL)
   // handle error messages after successfully connectiong
   .catch(error => console.error(`MongoDB: Error ${error}`));
 
 
 // Create some test data in the database for our app
+/***
 GROCERY_ITEMS.forEach(item => {
   const itemModel = new GroceryItem({ name: item.name, type: item.type });
   // NOTE: If desired see here for how to make this an upsert to get rid of annoying error messages:
@@ -53,6 +51,7 @@ GROCERY_ITEMS.forEach(item => {
       console.log(`MongoDB: Error on save: `, error.errmsg);
     })
 });
+***/
 
 /** 
  * Create and start our express server 
