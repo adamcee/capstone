@@ -60,7 +60,7 @@ GROCERY_ITEMS.forEach(item => {
  * **/
 
 // express server config
-const PORT = process.env.SERVER_PORT;
+const PORT = process.env.PORT || process.env.SERVER_PORT;
 
 console.log('starting express')
 const app = express();
@@ -108,5 +108,5 @@ app.get('*', (req, res) => {
 
 /** Start express server  */
 app.listen(PORT, () => {
-  console.log(`Example app listening at http://localhost:${PORT}`)
+  console.log(`Example app listening`); 
 })
