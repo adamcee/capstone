@@ -73,6 +73,10 @@ app.use(express.json());
 // by a different server and still make HTTP requests to this one.
 app.use(cors());
 
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'client/build')))
+
 // For development - console each HTTP request to the server
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path} with param ${JSON.stringify(req.params)}`);
@@ -94,6 +98,14 @@ app.get('/', (req, res) => {
 
 /** Mount all our various API routes here */
 app.use('/v1', routes);
+
+// IMPORTANT: Put after API routes
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/build/index.html'));
+});
+
 
 /** Start express server  */
 app.listen(PORT, () => {
